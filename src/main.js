@@ -3,11 +3,23 @@ var cache = require('./Cache'),
 	Persistance = require('./Persistance'),
 	tools = require('./tools');
 
+var defConfig = {
+	persistance: {
+		instantly: false,
+		buffer: 3,
+		bfTimeout: 3000
+	}
+};
+
 global.Usaginity = module.exports = Usaginity;
-function Usaginity () {
+function Usaginity (optConfig) {
 	var self = this;
 
-	var persitance = new Persistance(cache);
+	if (!optConfig) optConfig = {persistance:{}};
+
+	tools.extend(true, optConfig.persistance, defConfig.persistance);
+
+	var persitance = new Persistance(cache, optConfig.persistance);
 
 	self.queue = new tools.InmediateAsyncTaskQueue();
 
@@ -21,7 +33,7 @@ Usaginity.prototype.entering = function() {
 		createInteraction("entering");
 
 		window.addEventListener('beforeunload', function () {
-			createInteraction("leaving");
+			createInteraction("leaving", null, true);
 		});
 	});
 };
@@ -57,7 +69,6 @@ Usaginity.prototype.transition = function () {
 	});
 };
 
-
 Usaginity.prototype.startTimer = function (timerId) {
 	var self = this;
 
@@ -92,7 +103,7 @@ var simpleTracking = {
 	tstart: new Date()
 };
 
-function createInteraction(interactionName, interactionOptions) {
+function createInteraction(interactionName, interactionOptions, forcedSend) {
 	var newInteraction = new Interaction(interactionName);
 
 	var tracking = {
@@ -103,5 +114,5 @@ function createInteraction(interactionName, interactionOptions) {
 
 	tools.forcedExtend(newInteraction, tracking, interactionOptions);
 
-	cache.push(newInteraction);
+	cache.push(newInteraction, forcedSend);
 };

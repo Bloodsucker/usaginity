@@ -10,7 +10,7 @@ function Cache () {
 	initializeCache(this);
 };
 
-Cache.prototype.push = function (interaction) {
+Cache.prototype.push = function (interaction, forcedSend) {
 	var self = this;
 
 	self.interactions.push(interaction);
@@ -18,7 +18,7 @@ Cache.prototype.push = function (interaction) {
 	tools.setJSONCookie('usaginity_cache', self.interactions);
 
 	self.onPushFn.forEach(function (fn) {
-		fn();
+		fn(forcedSend);
 	});
 };
 

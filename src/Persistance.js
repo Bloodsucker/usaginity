@@ -16,13 +16,13 @@ function Persistance (cache, optConfig) {
 	self.cache = cache;
 
 	var bufferTimeoutId = null;
-	self.cache.listen(function () {
+	self.cache.listen(function (forcedSend) {
 		clearTimeout(bufferTimeoutId);
 		bufferTimeoutId = null;
 
-		if (self.config.instantly) {
+		if (self.config.instantly || forcedSend) {
 			self.flush();
-		} else if (self.config.buffer >= self.cache.interactions.length) {
+		} else if (self.config.buffer < self.cache.interactions.length) {
 			self.flush();
 		} else {
 			bufferTimeoutId = setTimeout(function () {

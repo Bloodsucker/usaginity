@@ -40,12 +40,19 @@ exports.forcedExtend = function (extended) {
 var cookie = require('cookie-cutter');
 exports.setJSONCookie = function (name, o) {
 	if (!o) {
-		cookie.set(name, null);
+		cookie.set(name, null, new Date(0));
 		return;
 	}
 
 	var json = JSON.stringify(o);
-	cookie.set(name, json);
+
+	var expirationDate = new Date();
+	expirationDate.setTime(expirationDate.getTime() + (60*24*60*60*1000)); //Two months from now
+
+	cookie.set(name, json, {
+		path: '/',
+		expires: expirationDate
+	});
 };
 
 exports.getJSONCookie = function (name) {
