@@ -55,3 +55,5 @@ exports.getJSONCookie = function (name) {
 
 	return JSON.parse(json);
 };
+
+exports.InmediateAsyncTaskQueue = require('./tools/InmediateAsyncTaskQueue');

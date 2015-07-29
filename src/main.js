@@ -11,13 +11,17 @@ function Usaginity () {
 	cache = new Cache();
 	persitance = new Persistance(cache);
 
+	self.queue = new tools.InmediateAsyncTaskQueue();
+
 	self.timers = {};
 };
 
 global.Usaginity = module.exports = Usaginity;
 
 Usaginity.prototype.entering = function() {
-	setTimeout(function () {
+	var self = this;
+
+	self.queue.enqueue(function () {
 		createInteraction("entering");
 
 		window.addEventListener('beforeunload', function () {
@@ -27,7 +31,9 @@ Usaginity.prototype.entering = function() {
 };
 
 Usaginity.prototype.event = function (eventType, nameId, label) {
-	setTimeout(function () {
+	var self = this;
+
+	self.queue.enqueue(function () {
 		createInteraction('event', {
 			eventType: eventType,
 			nameId: nameId,
@@ -37,7 +43,9 @@ Usaginity.prototype.event = function (eventType, nameId, label) {
 };
 
 Usaginity.prototype.transition = function () {
-	setTimeout(function () {
+	var self = this;
+
+	self.queue.enqueue(function () {
 		var tstart = simpleTracking.tstart;
 		var tend = new Date();
 		var tdiff = tend.getTime() - tstart.getTime();
@@ -57,7 +65,9 @@ Usaginity.prototype.transition = function () {
 Usaginity.prototype.startTimer = function (timerId) {
 	var self = this;
 
-	setTimeout(function () {
+	var self = this;
+
+	self.queue.enqueue(function () {
 		self.timers[timerId] = new Date();
 	});
 };
@@ -65,7 +75,9 @@ Usaginity.prototype.startTimer = function (timerId) {
 Usaginity.prototype.endTimer = function (timerId) {
 	var self = this;
 
-	setTimeout(function () {
+	var self = this;
+
+	self.queue.enqueue(function () {
 		var tstart = self.timers[timerId];
 		if (!tstart) return;
 
