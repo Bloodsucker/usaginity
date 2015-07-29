@@ -6,8 +6,12 @@ var Cache = require('./Cache'),
 var cache, persitance;
 
 function Usaginity () {
+	var self = this;
+
 	cache = new Cache();
 	persitance = new Persistance(cache);
+
+	self.timers = {};
 };
 
 global.Usaginity = module.exports = Usaginity;
@@ -36,16 +40,45 @@ Usaginity.prototype.transition = function () {
 	setTimeout(function () {
 		var tstart = simpleTracking.tstart;
 		var tend = new Date();
-		var tuser = tend.getTime() - tstart.getTime();
+		var tdiff = tend.getTime() - tstart.getTime();
 
 		simpleTracking.referrer = simpleTracking.current;
 		simpleTracking.current = document.URL;
 		simpleTracking.tstart = new Date();
 
 		createInteraction('transition', {
-			tend: tend + '',
-			tuser: tuser
+			tend: tend.getTime(),
+			tdiff: tdiff
 		});
+	});
+};
+
+
+Usaginity.prototype.startTimer = function (timerId) {
+	var self = this;
+
+	setTimeout(function () {
+		self.timers[timerId] = new Date();
+	});
+};
+
+Usaginity.prototype.endTimer = function (timerId) {
+	var self = this;
+
+	setTimeout(function () {
+		var tstart = self.timers[timerId];
+		if (!tstart) return;
+
+		var tend = new Date();
+		var tdiff = tend.getTime() - tstart.getTime();
+
+		createInteraction('timer', {
+			timerName: timerId,
+			tend: tend.getTime(),
+			tdiff: tdiff
+		});
+
+		self.timers[timerId] = null;
 	});
 };
 
