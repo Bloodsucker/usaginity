@@ -1,5 +1,4 @@
 module.exports = InmediateAsyncTaskQueue;
-
 function InmediateAsyncTaskQueue () {
 	var self = this;
 

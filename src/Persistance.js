@@ -7,6 +7,7 @@ var defConfig = {
 	bfTimeout: 3000
 };
 
+module.exports = Persistance;
 function Persistance (cache, optConfig) {
 	var self = this;
 
@@ -30,8 +31,6 @@ function Persistance (cache, optConfig) {
 		}
 	});
 };
-
-module.exports = Persistance;
 
 Persistance.prototype.flush = function () {
 	var self = this;

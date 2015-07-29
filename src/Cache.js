@@ -1,13 +1,12 @@
 var tools = require('./tools');
 
+module.exports = Cache;
 function Cache () {
 	var self = this;
 
 	self.interactions =  [];
 	self.onPushFn = [];
 };
-
-module.exports = Cache;
 
 Cache.prototype.push = function (interaction) {
 	this.interactions.push(interaction);

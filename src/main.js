@@ -5,6 +5,7 @@ var Cache = require('./Cache'),
 
 var cache, persitance;
 
+global.Usaginity = module.exports = Usaginity;
 function Usaginity () {
 	var self = this;
 
@@ -15,8 +16,6 @@ function Usaginity () {
 
 	self.timers = {};
 };
-
-global.Usaginity = module.exports = Usaginity;
 
 Usaginity.prototype.entering = function() {
 	var self = this;
@@ -65,16 +64,12 @@ Usaginity.prototype.transition = function () {
 Usaginity.prototype.startTimer = function (timerId) {
 	var self = this;
 
-	var self = this;
-
 	self.queue.enqueue(function () {
 		self.timers[timerId] = new Date();
 	});
 };
 
 Usaginity.prototype.endTimer = function (timerId) {
-	var self = this;
-
 	var self = this;
 
 	self.queue.enqueue(function () {
