@@ -1,24 +1,27 @@
-/**
- * @author http://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
- * 
- * Merge defaults with user options
- * @param {Object} defaults Default settings
- * @param {Object} options User options
- * @returns {Object} Merged values of defaults and options
- */
-exports.extend = function ( defaults, options ) {
-    var extended = {};
-    var prop;
-    for (prop in defaults) {
-        if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
-            extended[prop] = defaults[prop];
+exports.extend = function (extendFirstObject) {
+    var extended, from = 0;
+
+    if (typeof extendFirstObject === "boolean") {
+        if (extendFirstObject) {
+            extended = arguments[1];
+            from = 2;
+        } else {
+            from = 1;
         }
     }
-    for (prop in options) {
-        if (Object.prototype.hasOwnProperty.call(options, prop)) {
-            extended[prop] = options[prop];
+
+    extended = extended || {};
+
+    for (var i = from; i < arguments.length; ++i) {
+        var prop, o = arguments[i];
+
+        for (prop in o) {
+            if (Object.prototype.hasOwnProperty.call(o, prop)) {
+                extended[prop] = o[prop];
+            }
         }
     }
+
     return extended;
 };
 
