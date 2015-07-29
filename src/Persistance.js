@@ -35,10 +35,10 @@ function Persistance (cache, optConfig) {
 Persistance.prototype.flush = function () {
 	var self = this;
 
-	if (self.cache.interactions.length > 0) {
+	while(self.cache.interactions.length > 0) {	
 		var toSend = self.cache.unqueue(self.config.windowSize);
 
-		asyncSend(toSend, function () {
+		asyncSend(toSend, function onError() {
 			self.cache.requeue(toSend);
 		});
 	}
@@ -54,7 +54,7 @@ function asyncSend (o, onError) {
 // };
 
 function doFakeSending(o, onError) {
-	console.log("Sending", o);
+	console.table ? console.table(o) : console.log(o);
 
 	var fakeSent = tools.getJSONCookie('fakeSent') || [];
 	fakeSent = fakeSent.concat(o);
