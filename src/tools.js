@@ -1,40 +1,40 @@
 exports.extend = function (extendFirstObject) {
-    var extended, from = 0;
+	var extended, from = 0;
 
-    if (typeof extendFirstObject === "boolean") {
-        if (extendFirstObject) {
-            extended = arguments[1];
-            from = 2;
-        } else {
-            from = 1;
-        }
-    }
+	if (typeof extendFirstObject === "boolean") {
+		if (extendFirstObject) {
+			extended = arguments[1];
+			from = 2;
+		} else {
+			from = 1;
+		}
+	}
 
-    extended = extended || {};
+	extended = extended || {};
 
-    for (var i = from; i < arguments.length; ++i) {
-        var prop, o = arguments[i];
+	for (var i = from; i < arguments.length; ++i) {
+		var prop, o = arguments[i];
 
-        for (prop in o) {
-            if (Object.prototype.hasOwnProperty.call(o, prop)) {
-                extended[prop] = o[prop];
-            }
-        }
-    }
+		for (prop in o) {
+			if (Object.prototype.hasOwnProperty.call(o, prop)) {
+				extended[prop] = o[prop];
+			}
+		}
+	}
 
-    return extended;
+	return extended;
 };
 
 exports.forcedExtend = function (extended) {
-    for (var i = 1; i < arguments.length; ++i) {
-        var prop, o = arguments[i];
+	for (var i = 1; i < arguments.length; ++i) {
+		var prop, o = arguments[i];
 
-        for (prop in o) {
-            extended[prop] = o[prop];
-        }
-    }
+		for (prop in o) {
+			extended[prop] = o[prop];
+		}
+	}
 
-    return extended;
+	return extended;
 };
 
 var cookie = require('cookie-cutter');
