@@ -33,7 +33,11 @@ Usaginity.prototype.entering = function() {
 		createInteraction("entering");
 
 		window.addEventListener('beforeunload', function () {
-			createInteraction("leaving", null, true);
+			self.end();
+
+			self.queue.enqueue(function () {
+				createInteraction("leaving", null, true);
+			});
 		});
 	});
 };
@@ -95,6 +99,17 @@ Usaginity.prototype.endTimer = function (timerId) {
 
 		self.timers[timerId] = null;
 	});
+};
+
+Usaginity.prototype.end = function () {
+	var self = this;
+
+	var prop;
+	for (prop in self.timers) {
+		if (self.timers[prop]) {
+			self.endTimer(prop);
+		}
+	}
 };
 
 var simpleTracking = {
