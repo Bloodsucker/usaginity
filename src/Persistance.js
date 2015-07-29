@@ -36,21 +36,24 @@ Persistance.prototype.flush = function () {
 	var self = this;
 
 	if (self.cache.interactions.length > 0) {
-		var toSend = self.cache.interactions.splice(0, self.config.windowSize);
-		asyncSend(toSend);
+		var toSend = self.cache.unqueue(self.config.windowSize);
+
+		asyncSend(toSend, function () {
+			self.cache.requeue(toSend);
+		});
 	}
 };
 
-function asyncSend (o) {
-	// doAsyncAjax(o);
-	doFakeSending(o);
+function asyncSend (o, onError) {
+	// doAsyncAjax(o, onError);
+	doFakeSending(o, onError);
 }
 
-// function doAsyncAjax(o) {
+// function doAsyncAjax(o, onError) {
 // 	// Ajax call.
-// }
+// };
 
-function doFakeSending(o) {
+function doFakeSending(o, onError) {
 	console.log("Sending", o);
 
 	var fakeSent = tools.getJSONCookie('fakeSent') || [];

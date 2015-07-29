@@ -1,16 +1,13 @@
-var Cache = require('./Cache'),
+var cache = require('./Cache'),
 	Interaction = require('./Interaction'),
 	Persistance = require('./Persistance'),
 	tools = require('./tools');
-
-var cache, persitance;
 
 global.Usaginity = module.exports = Usaginity;
 function Usaginity () {
 	var self = this;
 
-	cache = new Cache();
-	persitance = new Persistance(cache);
+	var persitance = new Persistance(cache);
 
 	self.queue = new tools.InmediateAsyncTaskQueue();
 
