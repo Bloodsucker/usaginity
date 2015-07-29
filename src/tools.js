@@ -25,6 +25,18 @@ exports.extend = function (extendFirstObject) {
     return extended;
 };
 
+exports.forcedExtend = function (extended) {
+    for (var i = 1; i < arguments.length; ++i) {
+        var prop, o = arguments[i];
+
+        for (prop in o) {
+            extended[prop] = o[prop];
+        }
+    }
+
+    return extended;
+};
+
 var cookie = require('cookie-cutter');
 exports.setJSONCookie = function (name, o) {
 	if (!o) {

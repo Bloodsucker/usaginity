@@ -12,14 +12,6 @@ function Usaginity () {
 
 global.Usaginity = module.exports = Usaginity;
 
-function createInteraction (interactionName, interactionOptions) {
-	var newInteraction = new Interaction(interactionName);
-
-	tools.extend(true, newInteraction, interactionOptions);
-
-	cache.push(newInteraction);
-};
-
 Usaginity.prototype.entering = function() {
 	setTimeout(function () {
 		createInteraction("entering");
@@ -38,4 +30,41 @@ Usaginity.prototype.event = function (eventType, nameId, label) {
 			label: label
 		});
 	});
+};
+
+Usaginity.prototype.transition = function () {
+	setTimeout(function () {
+		var tstart = simpleTracking.tstart;
+		var tend = new Date();
+		var tuser = tend.getTime() - tstart.getTime();
+
+		simpleTracking.referrer = simpleTracking.current;
+		simpleTracking.current = document.URL;
+		simpleTracking.tstart = new Date();
+
+		createInteraction('transition', {
+			tend: tend + '',
+			tuser: tuser
+		});
+	});
+};
+
+var simpleTracking = {
+	referrer: document.referrer,
+	current: document.URL,
+	tstart: new Date()
+};
+
+function createInteraction(interactionName, interactionOptions) {
+	var newInteraction = new Interaction(interactionName);
+
+	var tracking = {
+		referrer: simpleTracking.referrer,
+		url: simpleTracking.current,
+		title: document.title
+	};
+
+	tools.forcedExtend(newInteraction, tracking, interactionOptions);
+
+	cache.push(newInteraction);
 };
