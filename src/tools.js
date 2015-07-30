@@ -63,4 +63,9 @@ exports.getJSONCookie = function (name) {
 	return JSON.parse(json);
 };
 
+exports.isNetworkAvailable = function () {
+	if (Math.random() < 0.3) return false;
+	else return true;
+}
+
 exports.InmediateAsyncTaskQueue = require('./tools/InmediateAsyncTaskQueue');

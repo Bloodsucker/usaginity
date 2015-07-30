@@ -35,6 +35,15 @@ function Persistance (cache, optConfig) {
 Persistance.prototype.flush = function () {
 	var self = this;
 
+	if (!tools.isNetworkAvailable()) {
+		console.log("Network is not available.");
+		//TODO Retry by event reconnect or timeout.
+		setTimeout(function () {
+			self.flush();
+		}, 3000);
+		return;
+	};
+
 	while(self.cache.interactions.length > 0) {	
 		var toSend = self.cache.unqueue(self.config.windowSize);
 
@@ -54,6 +63,7 @@ function asyncSend (o, onError) {
 // };
 
 function doFakeSending(o, onError) {
+	console.log("Interactions SENT:");
 	console.table ? console.table(o) : console.log(o);
 
 	var fakeSent = tools.getJSONCookie('fakeSent') || [];

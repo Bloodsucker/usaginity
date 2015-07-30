@@ -17,9 +17,12 @@ Cache.prototype.push = function (interaction, forcedSend) {
 
 	tools.setJSONCookie('usaginity_cache', self.interactions);
 
+	console.log("New Interaction (" + self.interactions.length + " queued):");
+	console.table([interaction]);
+
 	self.onPushFn.forEach(function (fn) {
 		setTimeout(function () {
-			fn(forcedSend);
+			fn(interaction, forcedSend);
 		});
 	});
 };
