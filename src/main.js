@@ -11,7 +11,12 @@ var defConfig = {
 	}
 };
 
-global.Usaginity = module.exports = Usaginity;
+var usaginity = null;
+global.Usaginity = module.exports = function singleton(optConfig) {
+	if (!usaginity) usaginity = new Usaginity(optConfig);
+	return usaginity;
+};
+
 function Usaginity (optConfig) {
 	var self = this;
 
