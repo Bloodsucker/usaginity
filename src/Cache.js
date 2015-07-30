@@ -10,6 +10,11 @@ function Cache () {
 	initializeCache(this);
 };
 
+/**
+ * Saves an Interaction in the cache
+ * @param  {Interaction} interaction Personalized Interaction object to store.
+ * @param  {[boolean]} forcedSend  As true, it will try to send the interaction inmediatelly.
+ */
 Cache.prototype.push = function (interaction, forcedSend) {
 	var self = this;
 
@@ -27,6 +32,11 @@ Cache.prototype.push = function (interaction, forcedSend) {
 	});
 };
 
+/**
+ * Retrieves a maximum number of cached Interactions.
+ * @param  {int} max 
+ * @return {Interaction[]}
+ */
 Cache.prototype.unqueue = function (max) {
 	var self = this;
 
@@ -37,6 +47,10 @@ Cache.prototype.unqueue = function (max) {
 	return interactions;
 };
 
+/**
+ * Enqueue at the beginning of the cache Interactions.
+ * @param  {Interaction[]} oldInteractions
+ */
 Cache.prototype.requeue = function (oldInteractions) {
 	var self = this;
 
@@ -45,10 +59,18 @@ Cache.prototype.requeue = function (oldInteractions) {
 	tools.setJSONCookie('usaginity_cache', self.interactions);
 };
 
+/**
+ * Listen for new pushed Interaction
+ * @param  {Function} fn Callback to be executed when a new Interaction has been pushed.
+ */
 Cache.prototype.listen = function (fn) {
 	this.onPushFn.push(fn);
 };
 
+/**
+ * Loads to the cache a possible old local cache.
+ * @param  {Cache} cache
+ */
 function initializeCache (cache) {
 	var oldCache = tools.getJSONCookie('usaginity_cache');
 	if(!oldCache || oldCache.length === 0) return;

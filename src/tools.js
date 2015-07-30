@@ -1,3 +1,8 @@
+/**
+ * jQuery extend like helper.
+ * @param  {[type]} extendFirstObject [description]
+ * @return {[type]}                   [description]
+ */
 exports.extend = function (extendFirstObject) {
 	var extended, from = 0;
 
@@ -25,6 +30,10 @@ exports.extend = function (extendFirstObject) {
 	return extended;
 };
 
+/**
+ * Copies properties to the first passed argument.
+ * @param  {object...} extended The first will be the destination object.
+ */
 exports.forcedExtend = function (extended) {
 	for (var i = 1; i < arguments.length; ++i) {
 		var prop, o = arguments[i];
@@ -53,7 +62,7 @@ exports.getJSONCookie = function (name) {
 };
 
 exports.isNetworkAvailable = function () {
-	if (Math.random() < 0.5) return false;
+	if (Math.random() < 0.3) return false;
 	else return true;
 }
 

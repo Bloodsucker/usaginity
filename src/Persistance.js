@@ -8,6 +8,11 @@ var defConfig = {
 };
 
 module.exports = Persistance;
+/**
+ * Persitance layer of Usaginity.
+ * @param {Cache} cache     	Cache to listen. When there are new Interactions, this layer will know.
+ * @param {[type]} optConfig
+ */
 function Persistance (cache, optConfig) {
 	var self = this;
 
@@ -16,16 +21,23 @@ function Persistance (cache, optConfig) {
 	self.cache = cache;
 
 	self._bufferTimeoutId = null;
+	// When there is a new Interaction in the cache layer, this layer will know by this callback.
 	self.cache.listen(function (forcedSend) {
 		clearTimeout(self._bufferTimeoutId);
 		self._bufferTimeoutId = null;
 
 		if (self.cache.interactions.length === 0) return;
 
+		//Check how to proceed depending of how was configured
+		//Send it instantly
 		if (self.config.instantly || forcedSend) {
 			self.flush();
+
+		//Send if the buffer is full
 		} else if (self.config.buffer < self.cache.interactions.length) {
 			self.flush();
+		
+		//Send buffered Interactions in the future.
 		} else {
 			self._bufferTimeoutId = setTimeout(function () {
 				self.flush();
@@ -34,21 +46,28 @@ function Persistance (cache, optConfig) {
 	});
 };
 
+/**
+ * Flush the interactions.
+ */
 Persistance.prototype.flush = function () {
 	var self = this;
 
 	if (!tools.isNetworkAvailable()) {
 		console.log("Network is not available.");
+
 		//TODO Retry by event reconnect or timeout.
 		self._bufferTimeoutId = setTimeout(function () {
 			self.flush();
 		}, 3000);
+
 		return;
 	};
 
-	while(self.cache.interactions.length > 0) {	
+	while(self.cache.interactions.length > 0) {
+		//Get "windowSize" Interactions to send.
 		var toSend = self.cache.unqueue(self.config.windowSize);
 
+		//Send them. If there was an error during sending, onError will requeue them.
 		asyncSend(toSend, function onError() {
 			self.cache.requeue(toSend);
 		});

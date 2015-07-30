@@ -12,20 +12,33 @@ var defConfig = {
 };
 
 var usaginity = null;
+/**
+ * Singleton for Usaginity.
+ * It does not matter if it is executed as new Usaginity(); or just Usaginity();
+ * @global
+ * @param  {[type]} optConfig
+ * @return {Usaginity}        Singleton for Usaginity.
+ */
 global.Usaginity = module.exports = function singleton(optConfig) {
 	if (!usaginity) usaginity = new Usaginity(optConfig);
 	return usaginity;
 };
 
+/**
+ * It defines the API to interact with Usaginity.
+ * @param {[object]} optConfig Optional configuration.
+ */
 function Usaginity (optConfig) {
 	var self = this;
 
+	//Identifies the browser.
 	basicIdentity();
 
 	if (!optConfig) optConfig = {persistance:{}};
 
 	tools.extend(true, optConfig.persistance, defConfig.persistance);
 
+	//Creates the persistance layer.
 	var persitance = new Persistance(cache, optConfig.persistance);
 
 	self.queue = new tools.InmediateAsyncTaskQueue();
@@ -33,6 +46,10 @@ function Usaginity (optConfig) {
 	self.timers = {};
 };
 
+/**
+ * Defines when to start tracking. It will detect automatically when to stop tracking.
+ * @async
+ */
 Usaginity.prototype.entering = function() {
 	var self = this;
 
@@ -48,6 +65,13 @@ Usaginity.prototype.entering = function() {
 	});
 };
 
+/**
+ * Creates an Interaction event.
+ * @async
+ * @param  {string} eventType The event type. E.g. 'click'.
+ * @param  {string} nameId    The id for the event.
+ * @param  {string} label     A label to specify between different same events.
+ */
 Usaginity.prototype.event = function (eventType, nameId, label) {
 	var self = this;
 
@@ -60,6 +84,10 @@ Usaginity.prototype.event = function (eventType, nameId, label) {
 	});
 };
 
+/**
+ * Defines a transition between two URL. It is useful when in sigle-page application.
+ * @async
+ */
 Usaginity.prototype.transition = function () {
 	var self = this;
 
@@ -79,6 +107,11 @@ Usaginity.prototype.transition = function () {
 	});
 };
 
+/**
+ * Defines an internal timer.
+ * @async
+ * @param  {string} timerId The timer ID.
+ */
 Usaginity.prototype.startTimer = function (timerId) {
 	var self = this;
 
@@ -87,6 +120,11 @@ Usaginity.prototype.startTimer = function (timerId) {
 	});
 };
 
+/**
+ * Defines when to stop a previously executed timer.
+ * @async
+ * @param  {string} timerId The timer ID.
+ */
 Usaginity.prototype.endTimer = function (timerId) {
 	var self = this;
 
@@ -107,6 +145,10 @@ Usaginity.prototype.endTimer = function (timerId) {
 	});
 };
 
+/**
+ * Automatically closes all opened timers.
+ * @async It executes several async operations.
+ */
 Usaginity.prototype.end = function () {
 	var self = this;
 
@@ -118,6 +160,10 @@ Usaginity.prototype.end = function () {
 	}
 };
 
+/**
+ * Helps to track main browser data.
+ * In single pages it tracks from what sections user comes.
+ */
 var simpleTracking = {
 	referrer: document.referrer,
 	current: document.URL,
@@ -135,6 +181,12 @@ function basicIdentity() {
 	tools.setJSONCookie("ugId", id);
 };
 
+/**
+ * When a code action is executed, it might create an Interaction filling it with some data.
+ * @param  {string} interactionName    		Interaction type name
+ * @param  {[object]} interactionOptions 	An object to extend and personalize the Interaction
+ * @param  {[boolean]} forcedSend         	If the browser is going to be closed inmediatelly, forceSend will be marked as true to try to send the Interaction. 
+ */
 function createInteraction(interactionName, interactionOptions, forcedSend) {
 	var newInteraction = new Interaction(interactionName);
 
@@ -147,5 +199,6 @@ function createInteraction(interactionName, interactionOptions, forcedSend) {
 
 	tools.forcedExtend(newInteraction, tracking, interactionOptions);
 
+	//Send the new Interaction to the cache.
 	cache.push(newInteraction, forcedSend);
 };
