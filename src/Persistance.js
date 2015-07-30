@@ -20,6 +20,8 @@ function Persistance (cache, optConfig) {
 		clearTimeout(bufferTimeoutId);
 		bufferTimeoutId = null;
 
+		if (self.cache.interactions.length === 0) return;
+
 		if (self.config.instantly || forcedSend) {
 			self.flush();
 		} else if (self.config.buffer < self.cache.interactions.length) {
