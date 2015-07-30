@@ -15,10 +15,10 @@ function Persistance (cache, optConfig) {
 
 	self.cache = cache;
 
-	var bufferTimeoutId = null;
+	self._bufferTimeoutId = null;
 	self.cache.listen(function (forcedSend) {
-		clearTimeout(bufferTimeoutId);
-		bufferTimeoutId = null;
+		clearTimeout(self._bufferTimeoutId);
+		self._bufferTimeoutId = null;
 
 		if (self.cache.interactions.length === 0) return;
 
@@ -27,7 +27,7 @@ function Persistance (cache, optConfig) {
 		} else if (self.config.buffer < self.cache.interactions.length) {
 			self.flush();
 		} else {
-			bufferTimeoutId = setTimeout(function () {
+			self._bufferTimeoutId = setTimeout(function () {
 				self.flush();
 			}, self.config.bfTimeout);
 		}
@@ -40,7 +40,7 @@ Persistance.prototype.flush = function () {
 	if (!tools.isNetworkAvailable()) {
 		console.log("Network is not available.");
 		//TODO Retry by event reconnect or timeout.
-		setTimeout(function () {
+		self._bufferTimeoutId = setTimeout(function () {
 			self.flush();
 		}, 3000);
 		return;

@@ -64,7 +64,7 @@ exports.getJSONCookie = function (name) {
 };
 
 exports.isNetworkAvailable = function () {
-	if (Math.random() < 0.3) return false;
+	if (Math.random() < 0.5) return false;
 	else return true;
 }
 
