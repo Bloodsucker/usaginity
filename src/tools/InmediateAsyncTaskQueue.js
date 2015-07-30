@@ -16,7 +16,7 @@ InmediateAsyncTaskQueue.prototype.enqueue = function (task) {
 
 	self._tasks.push(task);
 
-	Detects when there is already a planned execution.
+	//Detects when there is already a planned execution.
 	if (!self._executing) {
 		self._executing = true;
 
