@@ -40,11 +40,10 @@ Usaginity.prototype.entering = function() {
 		createInteraction("entering");
 
 		window.addEventListener('beforeunload', function () {
-			self.end();
+			self.queue.forceSync = true;
 
-			self.queue.enqueue(function () {
-				createInteraction("leaving", null, true);
-			});
+			self.end();
+			createInteraction("leaving", null, true);
 		});
 	});
 };
