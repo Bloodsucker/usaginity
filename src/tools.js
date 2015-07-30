@@ -68,4 +68,15 @@ exports.isNetworkAvailable = function () {
 	else return true;
 }
 
+//http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript/18120932#18120932
+exports.randomStr = function (stringLength) {
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	var randomString = Array.apply(null, new Array(stringLength)).map(function () {
+	    return possible[Math.floor(Math.random() * possible.length)];
+	}).join('');
+
+	return randomString;
+}
+
 exports.InmediateAsyncTaskQueue = require('./tools/InmediateAsyncTaskQueue');

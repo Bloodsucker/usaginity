@@ -20,6 +20,8 @@ global.Usaginity = module.exports = function singleton(optConfig) {
 function Usaginity (optConfig) {
 	var self = this;
 
+	basicIdentity();
+
 	if (!optConfig) optConfig = {persistance:{}};
 
 	tools.extend(true, optConfig.persistance, defConfig.persistance);
@@ -123,13 +125,25 @@ var simpleTracking = {
 	tstart: new Date()
 };
 
+function basicIdentity() {
+	var id = tools.getJSONCookie('ugId');
+	if (!id) {
+		id = tools.randomStr(32);
+	}
+
+	simpleTracking.trackId = id;
+
+	tools.setJSONCookie("ugId", id);
+};
+
 function createInteraction(interactionName, interactionOptions, forcedSend) {
 	var newInteraction = new Interaction(interactionName);
 
 	var tracking = {
 		referrer: simpleTracking.referrer,
 		url: simpleTracking.current,
-		title: document.title
+		title: document.title,
+		trackId: simpleTracking.trackId
 	};
 
 	tools.forcedExtend(newInteraction, tracking, interactionOptions);
