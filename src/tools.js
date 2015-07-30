@@ -37,29 +37,18 @@ exports.forcedExtend = function (extended) {
 	return extended;
 };
 
-var cookie = require('cookie-cutter');
 exports.setJSONCookie = function (name, o) {
 	if (!o) {
-		cookie.set(name, null, new Date(0));
+		localStorage.removeItem(name);
 		return;
 	}
 
-	var json = JSON.stringify(o);
-
-	var expirationDate = new Date();
-	expirationDate.setTime(expirationDate.getTime() + (60*24*60*60*1000)); //Two months from now
-
-	cookie.set(name, json, {
-		path: '/',
-		expires: expirationDate
-	});
+	localStorage.setItem(name, JSON.stringify(o));
 };
 
 exports.getJSONCookie = function (name) {
-	var json = cookie.get(name);
-
+	var json = localStorage.getItem(name);
 	if (!json) return null;
-
 	return JSON.parse(json);
 };
 
