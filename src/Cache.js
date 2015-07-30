@@ -22,7 +22,7 @@ Cache.prototype.push = function (interaction, forcedSend) {
 
 	self.onPushFn.forEach(function (fn) {
 		setTimeout(function () {
-			fn(interaction, forcedSend);
+			fn(forcedSend);
 		});
 	});
 };
