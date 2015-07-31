@@ -1,10 +1,10 @@
 var cache = require('./Cache'),
 	Interaction = require('./Interaction'),
-	Persistance = require('./Persistance'),
+	Persistence = require('./Persistence'),
 	tools = require('./tools');
 
 var defConfig = {
-	persistance: {
+	persistence: {
 		instantly: false,
 		buffer: 3,
 		bfTimeout: 3000
@@ -34,12 +34,12 @@ function Usaginity (optConfig) {
 	//Identifies the browser.
 	basicIdentity();
 
-	if (!optConfig) optConfig = {persistance:{}};
+	if (!optConfig) optConfig = {persistence:{}};
 
-	tools.extend(true, optConfig.persistance, defConfig.persistance);
+	tools.extend(true, optConfig.persistence, defConfig.persistence);
 
-	//Creates the persistance layer.
-	var persitance = new Persistance(cache, optConfig.persistance);
+	//Creates the persistence layer.
+	var persitance = new Persistence(cache, optConfig.persistence);
 
 	self.queue = new tools.InmediateAsyncTaskQueue();
 
@@ -53,6 +53,7 @@ function Usaginity (optConfig) {
 Usaginity.prototype.entering = function() {
 	var self = this;
 
+	//Every action, will
 	self.queue.enqueue(function () {
 		createInteraction("entering");
 
@@ -135,7 +136,7 @@ Usaginity.prototype.endTimer = function (timerId) {
 		var tend = new Date();
 		var tdiff = tend.getTime() - tstart.getTime();
 
-		createInteraction('timer', {
+		createInteraction('timer', {	
 			timerName: timerId,
 			tend: tend.getTime(),
 			tdiff: tdiff

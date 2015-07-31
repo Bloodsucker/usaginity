@@ -7,13 +7,13 @@ var defConfig = {
 	bfTimeout: 3000
 };
 
-module.exports = Persistance;
+module.exports = Persistence;
 /**
  * Persitance layer of Usaginity.
  * @param {Cache} cache     	Cache to listen. When there are new Interactions, this layer will know.
  * @param {[type]} optConfig
  */
-function Persistance (cache, optConfig) {
+function Persistence (cache, optConfig) {
 	var self = this;
 
 	self.config = tools.extend(defConfig, optConfig);
@@ -49,7 +49,7 @@ function Persistance (cache, optConfig) {
 /**
  * Flush the interactions.
  */
-Persistance.prototype.flush = function () {
+Persistence.prototype.flush = function () {
 	var self = this;
 
 	if (!tools.isNetworkAvailable()) {
